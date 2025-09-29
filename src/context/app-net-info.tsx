@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { JSX } from 'react';
 import { useNetInfo } from '@react-native-community/netinfo';
-import { View, Text, SafeAreaView, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import colors from '../styles/colors';
 import { Spacing } from '../styles';
 import { useStringsContext } from './strings-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface Props {
-  children: React.ReactChild | React.ReactChild[];
+  children: React.ReactNode | React.ReactNode[]
 }
 
 export const Context = React.createContext<boolean>(true);
