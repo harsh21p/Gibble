@@ -1,14 +1,14 @@
 import { Alert, Image, Pressable, ScrollView, Text, View } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styles from './styles';
 import Images from '../../assets/images';
 import * as RootNavigation from '../../navigation/rootNavigation';
 import routes from '..';
 type Props = {};
 const SplashScreen = (props: Props) => {
-  const onClickStart = () => {
+  const onClickStart = useCallback(() => {
     RootNavigation.navigate(routes.Signup);
-  };
+  }, [])
 
   return (
     <View style={styles.container}>
@@ -18,12 +18,11 @@ const SplashScreen = (props: Props) => {
         style={styles.logo}
         source={Images.logo.splashLogo}
       />
-
-      <Pressable onPress={() => onClickStart()} style={styles.button}>
+      <Pressable onPress={onClickStart} style={styles.button}>
         <Text style={styles.btntext}>Get Started</Text>
       </Pressable>
     </View>
   );
 };
 
-export default SplashScreen;
+export default React.memo(SplashScreen);
