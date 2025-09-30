@@ -16,7 +16,7 @@ const styles = EStyleSheet.create({
     // alignItems: 'flex-start',
     // justifyContent: 'center',
     // backgroundColor:'red'
-    flex: 0.3, justifyContent: 'flex-end', paddingBottom: "5rem"
+    flex: 0.3, justifyContent: 'flex-end', paddingBottom: "5rem",
   },
   input: {
     width: '70%',

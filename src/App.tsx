@@ -27,7 +27,7 @@ function App(): React.JSX.Element {
   //     return () => clearTimeout(timer);
   //   }
   // }, []);
-  EStyleSheet.build()
+  EStyleSheet.build();
   return (
     <>
       <SafeAreaProvider>

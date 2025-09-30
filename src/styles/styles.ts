@@ -1,9 +1,12 @@
 import {StyleSheet} from 'react-native';
 
-const Styles = StyleSheet.create({
+const CommonStyles = StyleSheet.create({
   btnDisabled: {
     color: 'center',
   },
+  appBackground:{
+    backgroundColor:"white"
+  }
 });
 
-export default Styles;
+export default CommonStyles;
