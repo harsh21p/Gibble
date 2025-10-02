@@ -27,7 +27,11 @@ function App(): React.JSX.Element {
   //     return () => clearTimeout(timer);
   //   }
   // }, []);
-  EStyleSheet.build();
+  EStyleSheet.build({
+    $primaryBgColor: "#305EFF",
+    $whiteText: "#ffffff",
+    $darkText: "#1F2024"
+  });
   return (
     <>
       <SafeAreaProvider>

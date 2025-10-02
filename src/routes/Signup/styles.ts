@@ -3,38 +3,48 @@ import { ViewStyle, TextStyle, ImageStyle } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 // Define a custom type that combines standard RN styles with EStyleSheet features
-type ExtendedStyle = ViewStyle | TextStyle | ImageStyle | {
-  // Add any specific EStyleSheet properties you use, e.g., variables
-  $variables?: { [key: string]: any };
-  // ... other EStyleSheet specific properties
-};
+type ExtendedStyle =
+  | ViewStyle
+  | TextStyle
+  | ImageStyle
+  | {
+      // Add any specific EStyleSheet properties you use, e.g., variables
+      $variables?: { [key: string]: any };
+      // ... other EStyleSheet specific properties
+    };
 const styles = EStyleSheet.create({
   containerlogo: {
     // width: '100%',
-    // flex: 1, 
+    // flex: 1,
     // alignContent: 'flex-start',
     // alignItems: 'flex-start',
     // justifyContent: 'center',
     // backgroundColor:'red'
-    flex: 0.3, justifyContent: 'flex-end', paddingBottom: "5rem",
+    flex: 0.3,
+    justifyContent: 'flex-end',
+    paddingBottom: '5rem',
+  },
+  containerPhone: {
+    alignItems: 'center',
   },
   input: {
     width: '70%',
     marginBottom: '5%',
   },
-  icon: {
-
-  },
+  icon: {},
   name: {
     fontSize: 24,
-    color: 'rgba(48, 94, 255, 1)'
+    color: 'rgba(48, 94, 255, 1)',
   },
   container: {
     flex: 1,
-    justifyContent: "center"
+    justifyContent: 'center',
   },
   container0: {
-    flexDirection: 'row', flex: 1, gap: 20, justifyContent: "center"
+    flexDirection: 'row',
+    flex: 1,
+    gap: 20,
+    justifyContent: 'center',
   },
   container1: {
     width: '40%',
@@ -47,7 +57,7 @@ const styles = EStyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: '5%',
     paddingTop: '35%',
-    marginBottom: '10%'
+    marginBottom: '10%',
   },
   container3: {
     // height: '100%',
@@ -55,7 +65,7 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flex: 0.5,
-    backgroundColor: "red",
+    backgroundColor: 'red',
   },
   line: {
     width: '0.1%',
@@ -77,16 +87,21 @@ const styles = EStyleSheet.create({
     lineHeight: 20,
     marginBottom: '1%',
   },
-  logomain: {
+  logoMainPhone: {
     // width: '30%',
     // height: '50%',
     // resizeMode: 'contain',
     // marginLeft: '5%',
     // marginTop: '10%',
-    height: "10rem",
-    width: "25rem",
-    paddingLeft: "2rem",
-    resizeMode: "contain",
+    height: '7rem',
+    width: '12rem',
+    resizeMode: 'contain',
+  },
+  logoMainTablet: {
+    height: '10rem',
+    width: '25rem',
+    paddingLeft: '2rem',
+    resizeMode: 'contain',
   },
   image: {
     width: '30%',

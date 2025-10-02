@@ -16,7 +16,7 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  mobileContainer: {
+  phoneContainer: {
     padding: "2rem",
     flex: 1,
   },

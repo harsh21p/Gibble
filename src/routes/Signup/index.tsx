@@ -1,4 +1,12 @@
-import { Alert, Dimensions, Image, Pressable, ScrollView, Text, View } from 'react-native';
+import {
+  Alert,
+  Dimensions,
+  Image,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import styles from './styles';
 import Images from '../../assets/images';
@@ -10,11 +18,13 @@ import SignupLevel from '../../components/SignupLevel';
 import Carousel, {
   ICarouselInstance,
   Pagination,
-} from "react-native-reanimated-carousel";
+} from 'react-native-reanimated-carousel';
 import { useSharedValue } from 'react-native-reanimated';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { isTablet } from 'react-native-device-info';
 type Props = {};
 const Signup = (props: Props) => {
-  const onClickSignup = () => { };
+  const onClickSignup = () => {};
   const ref = React.useRef<ICarouselInstance>(null);
   const progress = useSharedValue<number>(0);
 
@@ -28,63 +38,70 @@ const Signup = (props: Props) => {
       animated: true,
     });
   };
-  const { height: screenHeight, width: screenWidth } = Dimensions.get("screen")
+  const { height: screenHeight, width: screenWidth } = Dimensions.get('screen');
   return (
-    <View style={{ flex: 1, justifyContent: "center" }}>
-      <View style={styles.containerlogo}>
+    <SafeAreaView style={{ flex: 1, justifyContent: 'center' }}>
+      <View style={isTablet() ? styles.containerlogo : styles.containerPhone}>
         <Image
-          key={Images.logo.logomain}
-          style={styles.logomain}
-          source={Images.logo.logomain}
+          key={Images.logo.logoMain}
+          style={isTablet() ? styles.logoMainTablet : styles.logoMainPhone}
+          source={Images.logo.logoMain}
         />
       </View>
 
       <View style={styles.container0}>
-        <View style={{ paddingLeft: 10 }}>
-          {/* <Pressable
+        {isTablet() ? (
+          <View style={{ paddingLeft: 10 }}>
+            {/* <Pressable
               onPress={() => onClickSignup()}
               style={styles.circlebutton}
             >
               <IconView src={Icons.logo.back} style={styles.icon} />
             </Pressable>
 
-            <Image key={Images.logo.logomain} style={styles.imagemain} />
+            <Image key={Images.logo.logoMain} style={styles.imagemain} />
             <Pressable
               onPress={() => onClickSignup()}
               style={styles.circlebutton}
             >
               <IconView src={Icons.logo.back} style={styles.icon} />
             </Pressable> */}
-          <Carousel
-            ref={ref}
-            onProgressChange={progress}
-            mode='horizontal-stack'
-            modeConfig={{
-              snapDirection: 'left',
-              stackInterval: 10,
-            }}
-            width={screenWidth / 3}
-            height={screenHeight / 4}
-            data={[0]}
-            renderItem={({ index }) => (
-              <Image key={Images.logo.logomain} style={styles.imagemain} />
-            )}
-          />
-          <Pagination.Basic
-            progress={progress}
-            data={[0]}
-            dotStyle={{ backgroundColor: "rgba(0,0,0,0.2)", borderRadius: 50 }}
-            containerStyle={{ gap: 5, marginTop: 10 }}
-            onPress={onPressPagination}
-          />
-          <Text style={styles.text1}>
-            {
-              'Body content to be written here. All the\ndescription is to be written here'
-            }
-          </Text>
-        </View>
+            <Carousel
+              ref={ref}
+              onProgressChange={progress}
+              mode="horizontal-stack"
+              modeConfig={{
+                snapDirection: 'left',
+                stackInterval: 10,
+              }}
+              width={screenWidth / 3}
+              height={screenHeight / 4}
+              data={[0]}
+              renderItem={({ index }) => (
+                <Image key={Images.logo.logoMain} style={styles.imagemain} />
+              )}
+            />
+            <Pagination.Basic
+              progress={progress}
+              data={[0]}
+              dotStyle={{
+                backgroundColor: 'rgba(0,0,0,0.2)',
+                borderRadius: 50,
+              }}
+              containerStyle={{ gap: 5, marginTop: 10 }}
+              onPress={onPressPagination}
+            />
+            <Text style={styles.text1}>
+              {
+                'Body content to be written here. All the\ndescription is to be written here'
+              }
+            </Text>
+          </View>
+        ) : null}
 
-        <View style={[styles.line, { height: screenHeight / 2 }]} />
+        {isTablet() ? (
+          <View style={[styles.line, { height: screenHeight / 2 }]} />
+        ) : null}
         {/* Main Form  */}
         {/* <View style={styles.container3}>
 
@@ -110,12 +127,15 @@ const Signup = (props: Props) => {
           <SignupLevel style={{}} />
         </View> */}
 
-        <SignupLevel style={{}} />
-
+        {isTablet() ? (
+          <SignupLevel style={{}} isTablet={true} />
+        ) : (
+          <SignupLevel style={{}} isTablet={false} />
+        )}
 
         {/* After Otp */}
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

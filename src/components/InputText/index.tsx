@@ -5,7 +5,9 @@ import {
   ScrollView,
   Text,
   TextInput,
+  TextStyle,
   View,
+  ViewStyle,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import styles from './styles';
@@ -14,8 +16,8 @@ import Svg, { Path } from 'react-native-svg';
 type Props = {
   lable: string;
   placeholder: string;
-  style: any;
-  styleInput?: any;
+  style: ViewStyle;
+  styleInput?: TextStyle;
   required?: boolean;
   stylelable?: any;
   dropdown?: boolean;
@@ -36,7 +38,7 @@ const InputText = ({
   };
 
   return (
-    <View style={[styles.container, style]}>
+    <View style={[style ?? styles.container]}>
       <Text style={[styles.label, stylelable]}>
         {lable}
         {required && <Text style={styles.red}>{' *'}</Text>}

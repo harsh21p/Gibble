@@ -35,11 +35,11 @@ const SplashScreen = (props: Props) => {
   const renderItem = useMemo(() => {
     return ({ index }) => (
       <View style={{ width: "100%", height: "100%", backgroundColor: '#EAF2FF', justifyContent: 'center', borderRadius: 4 }}>
-        <Image key={Images.mobile.carousel} style={{
+        <Image key={Images.phone.carousel} style={{
           width: "auto",
           height: 20,
           resizeMode: "contain"
-        }} source={Images.mobile.carousel} />
+        }} source={Images.phone.carousel} />
       </View>
     )
   }, [])
@@ -56,12 +56,12 @@ const SplashScreen = (props: Props) => {
           <Text style={styles.btntext}>Get Started</Text>
         </Pressable>
       </View>
-      : <SafeAreaView style={[styles.container, styles.mobileContainer, CommonStyles.appBackground]}>
+      : <SafeAreaView style={[styles.container, styles.phoneContainer, CommonStyles.appBackground]}>
         <View style={{ flex: 0.7, width: "100%", alignItems: "center", justifyContent: 'flex-end' }}>
           <Image
             key={Images.logo.splashLogo}
             style={{ height: "60%", width: "80%", resizeMode: "contain" }}
-            source={Images.logo.logomain}
+            source={Images.logo.logoMain}
           />
           <Text style={{ fontStyle: "italic", color: "#666666", fontWeight: "600", fontSize: 20, textAlign: "center" }}>
             {`Immerse in the experience of\n learning.`}

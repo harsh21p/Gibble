@@ -4,10 +4,10 @@ const Images = {
   },
   logo: {
     splashLogo: require('./images/splash_logo.png'),
-    logomain: require('./images/logo_main.png'),
+    logoMain: require('./images/logo_main.png'),
   },
-  mobile: {
-    carousel: require("./images/mobileSplashCarousel.jpg")
+  phone: {
+    carousel: require("./images/phoneSplashCarousel.jpg")
   }
 };
 
