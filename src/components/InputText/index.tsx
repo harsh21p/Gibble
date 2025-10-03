@@ -1,5 +1,6 @@
 import {
   Alert,
+  FocusEvent,
   Image,
   Pressable,
   ScrollView,
@@ -12,6 +13,13 @@ import {
 import React, { useEffect, useState } from 'react';
 import styles from './styles';
 import Svg, { Path } from 'react-native-svg';
+import {
+  FieldError,
+  FieldValues,
+  RefCallBack,
+  RegisterOptions,
+  useForm,
+} from 'react-hook-form';
 
 type Props = {
   lable: string;
@@ -21,22 +29,30 @@ type Props = {
   required?: boolean;
   stylelable?: any;
   dropdown?: boolean;
+  isError: FieldError | undefined;
+  name: string;
+  ref: RefCallBack;
+  onBlur: (event: FocusEvent) => void;
+  onChange: (event: any) => void;
 };
-const InputText = ({
-  lable,
-  placeholder,
-  style,
-  required = false,
-  styleInput = {},
-  stylelable = {},
-  dropdown = false,
-}: Props) => {
+const InputText = (props: Props) => {
   const [text, setText] = useState('');
 
   const handleChangeText = (input: string) => {
     setText(input);
   };
-
+  const {
+    lable,
+    placeholder,
+    style,
+    required = false,
+    styleInput = {},
+    stylelable = {},
+    dropdown = false,
+    isError,
+    ...rest
+  } = props;
+  // const { register, handleSubmit, formState } = useForm();
   return (
     <View style={[style ?? styles.container]}>
       <Text style={[styles.label, stylelable]}>
@@ -45,9 +61,17 @@ const InputText = ({
       </Text>
       <View style={styles.dropdownMain}>
         <TextInput
-          style={[styles.input, styleInput]}
-          value={text}
-          onChangeText={handleChangeText}
+          {...rest}
+          style={[
+            styles.input,
+            styleInput,
+            isError?.message && {
+              backgroundColor: '#f8e2e2',
+              borderColor: '#d28282ff',
+            },
+          ]}
+          onBlur={rest.onBlur}
+          onChangeText={rest.onChange}
           placeholder={placeholder}
         />
         {dropdown && (
