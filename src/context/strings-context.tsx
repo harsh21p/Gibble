@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { JSX, useCallback, useEffect, useMemo, useState } from 'react';
 
 interface Props {
-  children: React.ReactChild | React.ReactChild[] | JSX.Element;
+  children: React.ReactNode | React.ReactNode[] | JSX.Element;
 }
 
 interface DataManager {

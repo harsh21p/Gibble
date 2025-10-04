@@ -12,6 +12,8 @@ import AppNavigator from './navigation';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
 import StringsDataProvider, { StringsContext } from './context/strings-context';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
 function App(): React.JSX.Element {
   // useEffect(() => {
@@ -25,13 +27,19 @@ function App(): React.JSX.Element {
   //     return () => clearTimeout(timer);
   //   }
   // }, []);
-
+  EStyleSheet.build({
+    $primaryBgColor: "#305EFF",
+    $whiteText: "#ffffff",
+    $darkText: "#1F2024"
+  });
   return (
     <>
-      <StatusBar barStyle="dark-content" />
-      <StringsDataProvider>
-        <AppNavigator />
-      </StringsDataProvider>
+      <SafeAreaProvider>
+        <StatusBar barStyle="dark-content" />
+        <StringsDataProvider>
+          <AppNavigator />
+        </StringsDataProvider>
+      </SafeAreaProvider>
     </>
   );
 }

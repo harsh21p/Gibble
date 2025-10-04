@@ -4,7 +4,7 @@ import {
   NavigationContainer,
 } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 import 'react-native-gesture-handler';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
@@ -17,10 +17,8 @@ import {
   removeItem,
   setItem,
 } from '../hooks/use-async-storage';
-import Signup from '../routes/Signup';
 import FullScreenLoader from '../components/FullScreenLoader';
 import { keys } from '../constants/async-storage-keys';
-import SplashScreen from '../routes/SplashScreen';
 
 const RootStack = createStackNavigator();
 const MyHomeStack = createStackNavigator();
@@ -30,7 +28,8 @@ const MyIntroStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const routesToHideBottomNav = [routes.SplashScreen];
-
+const SplashScreen = lazy(() => import('../routes/SplashScreen'));
+const Signup = lazy(() => import('../routes/Signup'));
 const AppNavigator = () => {
   const { authData } = useAuthContext();
   const [loading, setLoading] = useState(false);
@@ -217,7 +216,11 @@ const AppNavigator = () => {
         /> */}
         <MyIntroStack.Screen
           name={routes.SplashScreen}
-          component={SplashScreen}
+          children={(props: any) => (
+            <Suspense fallback={<FullScreenLoader />}>
+              <SplashScreen {...props} />
+            </Suspense>
+          )}
         />
       </MyIntroStack.Navigator>
     );
@@ -244,7 +247,15 @@ const AppNavigator = () => {
             component={IntroScreens}
           />
         )}
-        <RootStack.Screen name={routes.Signup} component={Signup} />
+        <RootStack.Screen
+          name={routes.Signup}
+          
+          children={(props: any) => (
+            <Suspense fallback={<FullScreenLoader />}>
+              <Signup/>
+            </Suspense>
+          )}
+        />
       </RootStack.Group>
     );
     // );
