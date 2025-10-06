@@ -249,7 +249,6 @@ const AppNavigator = () => {
         )}
         <RootStack.Screen
           name={routes.Signup}
-          
           children={(props: any) => (
             <Suspense fallback={<FullScreenLoader />}>
               <Signup/>

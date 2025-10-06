@@ -1,4 +1,11 @@
-import React, { JSX, useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import { JSX } from 'react/jsx-runtime';
 
 interface Props {
   children: React.ReactNode | React.ReactNode[] | JSX.Element;
@@ -63,7 +70,7 @@ export const StringsContext = React.createContext<DataManager>({
 export const useStringsContext = (): DataManager =>
   React.useContext(StringsContext);
 
-const StringsDataProvider = ({ children }: Props): JSX.Element => {
+const StringsDataProvider: React.FC<any> = (props: Props): ReactNode => {
   const [stringsData, setData] = useState<{}>(initialState);
   const [imagesData, setImgsData] = useState<{}>(initialImagesState);
   const [objectsData, setObjData] = useState<{}>(initialObjectsState);
@@ -114,7 +121,7 @@ const StringsDataProvider = ({ children }: Props): JSX.Element => {
 
   return (
     <StringsContext.Provider value={dataManager}>
-      {children}
+      {props.children}
     </StringsContext.Provider>
   );
 };

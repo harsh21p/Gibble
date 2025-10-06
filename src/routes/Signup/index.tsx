@@ -128,9 +128,9 @@ const Signup = (props: Props) => {
         </View> */}
 
         {isTablet() ? (
-          <SignupLevel style={{}} isTablet={true} />
+          <SignupLevel style={{}} isTablet={true} onClickNext={()=>console.log("nextClicked")} />
         ) : (
-          <SignupLevel style={{}} isTablet={false} />
+          <SignupLevel style={{}} isTablet={false} onClickNext={()=>console.log("nextClicked")} />
         )}
 
         {/* After Otp */}

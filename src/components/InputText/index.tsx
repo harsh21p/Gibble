@@ -10,7 +10,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { RefObject, useEffect, useState } from 'react';
 import styles from './styles';
 import Svg, { Path } from 'react-native-svg';
 import {
@@ -27,13 +27,13 @@ type Props = {
   style: ViewStyle;
   styleInput?: TextStyle;
   required?: boolean;
-  stylelable?: any;
+  labelStyle?: any;
   dropdown?: boolean;
   isError: FieldError | undefined;
-  name: string;
-  ref: RefCallBack;
-  onBlur: (event: FocusEvent) => void;
-  onChange: (event: any) => void;
+  name?: string;
+  ref?: RefCallBack|RefObject<any>;
+  onBlur?: (event: FocusEvent) => void;
+  onChange?: (event: any) => void;
 };
 const InputText = (props: Props) => {
   const [text, setText] = useState('');
@@ -47,7 +47,7 @@ const InputText = (props: Props) => {
     style,
     required = false,
     styleInput = {},
-    stylelable = {},
+    labelStyle = {},
     dropdown = false,
     isError,
     ...rest
@@ -55,7 +55,7 @@ const InputText = (props: Props) => {
   // const { register, handleSubmit, formState } = useForm();
   return (
     <View style={[style ?? styles.container]}>
-      <Text style={[styles.label, stylelable]}>
+      <Text style={[styles.label, labelStyle]}>
         {lable}
         {required && <Text style={styles.red}>{' *'}</Text>}
       </Text>

@@ -15,7 +15,7 @@ import StringsDataProvider, { StringsContext } from './context/strings-context';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
-function App(): React.JSX.Element {
+function App(): React.ReactElement {
   // useEffect(() => {
   //   if (Platform.OS === "android") {
   //     PermissionsAndroid.request(
@@ -28,9 +28,14 @@ function App(): React.JSX.Element {
   //   }
   // }, []);
   EStyleSheet.build({
-    $primaryBgColor: "#305EFF",
-    $whiteText: "#ffffff",
-    $darkText: "#1F2024"
+    $primaryBgColor: '#305EFF',
+    $whiteText: '#ffffff',
+    $darkText: '#1F2024',
+    $blurBgColor: '#eaeaeaff',
+    $disabledTextColor: '#8F9098',
+    $filledBgColor: '#B4DBFF',
+    $unSelectColor: '#40566D',
+    $fadedBorderColor: '#6c849D',
   });
   return (
     <>
