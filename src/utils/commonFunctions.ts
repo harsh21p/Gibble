@@ -3,7 +3,7 @@
 import { Dimensions, PixelRatio } from 'react-native';
 import parser from 'fast-xml-parser';
 import { StaticDataNamespace } from '../constants/staticData';
-import { ImusicClassDetails } from '../components/SignupLevel';
+import { ImusicClassDetails } from '../types';
 
 // Retrieve initial screen's width
 const { height, width } = Dimensions.get('window');

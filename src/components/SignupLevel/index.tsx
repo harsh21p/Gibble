@@ -11,7 +11,7 @@ import DashedDivider from '../DashedDivider';
 import Button from '../Button';
 import InputText from '../InputText';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { Controller, ErrorOption, SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import schema from '../zod';
 import z from 'zod';
@@ -23,20 +23,9 @@ import {
 import DeviceInfo from 'react-native-device-info';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { handleMusicalDetailsState } from '../../utils/commonFunctions';
+import { iMusicalDetailsErrors, ImusicClassDetails } from '../../types';
 
-interface SelectableItem {
-  isSelected: boolean;
-  value: string;
-}
 
-// Main interface for the music class configuration
-export interface ImusicClassDetails {
-  musicClassName: string;
-  Instruments: SelectableItem[];
-  Experience: SelectableItem[];
-  Students: SelectableItem[];
-  ModeOfTeaching: SelectableItem[];
-}
 
 type Props = {
   style: any;
@@ -49,11 +38,13 @@ const SignupLevel = ({ style, onClickNext, isTablet }: Props) => {
   const [selected, setSelected] = useState(1);
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const [muscialDetails, setMusicalDetails] = useState<ImusicClassDetails>(musicalDataInstance);
+  const [musicalDetailsError, setMusicalDetailsError] = useState<iMusicalDetailsErrors>()
   const { INSTRUMENTS, EXPERIENCE, MODE_OF_TEACHING, STUDENTS } = StaticDataNamespace.MusicalDetailsKeys;
   const { register, handleSubmit, formState: { errors }, control, getValues, } = useForm({
     resolver: zodResolver(schema.SignUpSchema),
   });
-  const classNameRef = useRef<TextInput>(null);
+  const classNameRegex = /[a-zA-Z0-9]+\s*/;
+  const classNameRef = useRef<string>("");
   const insets = useSafeAreaInsets();
   /**
    * 
@@ -64,6 +55,7 @@ const SignupLevel = ({ style, onClickNext, isTablet }: Props) => {
   ) => {
     return (
       <TouchableOpacity
+        key={`${index}-${key}`}
         onPress={() => handleMusicalDetailsState(setMusicalDetails, key, value)}
       >
         <Text
@@ -94,17 +86,38 @@ const SignupLevel = ({ style, onClickNext, isTablet }: Props) => {
    * @returns void
    */
   const handleNextSubmit = useCallback(() => {
-    return handleSubmit(
-      () => {
-        onClickNext();
-        setSelected(prev => (prev <= 2 ? prev + 1 : prev));
-      },
-      () => {
-        // An alert to be shown when error 
-
-      },
-    )()
-  }, []);
+    console.log(selected)
+    switch (selected) {
+      case 1: {
+        return handleSubmit(
+          () => {
+            onClickNext();
+            setSelected(prev => (prev <= 2 ? prev + 1 : prev));
+          },
+          () => {
+            // An alert to be shown when error 
+            setSelected(prev => (prev <= 2 ? prev + 1 : prev));
+          },
+        )()
+      }
+      case 2: {
+        const { musicClassName, Experience, Instruments, Students, ModeOfTeaching } = muscialDetails;
+        console.log(classNameRef.current, classNameRegex.test(classNameRef.current))
+        const isValid = classNameRegex.test(classNameRef.current) && [Experience, Instruments, Students, ModeOfTeaching].every(item => item.some(element => element.isSelected));
+        setMusicalDetailsError((prev: any) => ({
+          ...prev,
+          className: { message: !classNameRegex.test(classNameRef.current) ? "Please enter class name" : "" },
+          Experience: { message: Experience.some(element => element.isSelected) ? "" : "Please select total years of experience" },
+          Students: { message: Students.some(element => element.isSelected) ? "" : "Please select the number of students you have" },
+          ModeOfTeaching: { message: ModeOfTeaching.some(element => element.isSelected) ? "" : "Please select your mode of teaching" }
+        }))
+        if (isValid) {
+          onClickNext();
+          setSelected(prev => (prev <= 2 ? prev + 1 : prev));
+        }
+      }
+    }
+  }, [selected]);
   /**
    * 
    * @param index 
@@ -232,9 +245,14 @@ const SignupLevel = ({ style, onClickNext, isTablet }: Props) => {
             {/* Row 1 */}
             <View style={{ gap: 15 }}>
               <InputText
-                ref={classNameRef}
-                isError={{}}
+                isError={musicalDetailsError?.className}
                 labelStyle={styles.labelStyle}
+                onChange={text => {
+                  if (musicalDetailsError?.className.message && classNameRegex.test(text)) {
+                    setMusicalDetailsError((prev: any) => ({ ...prev, className: { message: "" } }))
+                  }
+                  classNameRef.current = text
+                }}
                 required
                 style={{ width: '100%' }}
                 styleInput={styles.inputMain}

@@ -14,6 +14,7 @@ import React, { RefObject, useEffect, useState } from 'react';
 import styles from './styles';
 import Svg, { Path } from 'react-native-svg';
 import {
+  ErrorOption,
   FieldError,
   FieldValues,
   RefCallBack,
@@ -29,9 +30,9 @@ type Props = {
   required?: boolean;
   labelStyle?: any;
   dropdown?: boolean;
-  isError: FieldError | undefined;
+  isError: FieldError | undefined | ErrorOption;
   name?: string;
-  ref?: RefCallBack|RefObject<any>;
+  ref?: RefCallBack | RefObject<any>;
   onBlur?: (event: FocusEvent) => void;
   onChange?: (event: any) => void;
 };
@@ -52,7 +53,6 @@ const InputText = (props: Props) => {
     isError,
     ...rest
   } = props;
-  // const { register, handleSubmit, formState } = useForm();
   return (
     <View style={[style ?? styles.container]}>
       <Text style={[styles.label, labelStyle]}>

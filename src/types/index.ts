@@ -1,4 +1,5 @@
 import { number, string } from "@redux-saga/is";
+import { ErrorOption } from "react-hook-form";
 import { Double } from "react-native/Libraries/Types/CodegenTypes";
 
 //Auth
@@ -709,4 +710,27 @@ export interface UpdateImagesError {
   message: string;
   data: string;
   error: boolean;
+}
+
+//sign up
+export interface SelectableItem {
+  isSelected: boolean;
+  value: string;
+}
+
+// Main interface for the music class configuration
+export interface ImusicClassDetails {
+  musicClassName: string;
+  Instruments: SelectableItem[];
+  Experience: SelectableItem[];
+  Students: SelectableItem[];
+  ModeOfTeaching: SelectableItem[];
+}
+
+export interface iMusicalDetailsErrors {
+  className: ErrorOption
+  Instruments: ErrorOption;
+  Experience: ErrorOption;
+  Students: ErrorOption;
+  ModeOfTeaching: ErrorOption;
 }

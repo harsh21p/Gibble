@@ -94,15 +94,13 @@ const styles = EStyleSheet.create({
     color: '$whiteText',
   },
   buttonView: {
-    width: '100%',
-    alignContent: 'flex-end',
-    alignItems: 'flex-end',
-    justifyContent: 'flex-end',
+    width: '40%',
     paddingRight: '5%',
+    alignSelf:"flex-end",
     marginTop: 20,
   },
   buttonViewPhone: {
-    paddingHorizontal: '1.1rem',
+    paddingHorizontal: '1.3rem',
   },
   next: {
     backgroundColor: '$primaryBgColor',
