@@ -22,12 +22,27 @@ import Carousel, {
 import { useSharedValue } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { isTablet } from 'react-native-device-info';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { create } from 'react-native-extended-stylesheet';
+import { callCreateMaterial, createMaterialInfo } from './signup/slice';
 type Props = {};
 const Signup = (props: Props) => {
   const onClickSignup = () => {};
   const ref = React.useRef<ICarouselInstance>(null);
   const progress = useSharedValue<number>(0);
 
+  const { getMaterialError, getMaterialResponse, isGetMaterialLoading } =
+    useAppSelector(createMaterialInfo);
+  const dispatch = useAppDispatch();
+
+  const onGetMaterial = async () => {
+    let payload: any = {
+      labId: '',
+    };
+    dispatch(callCreateMaterial(payload));
+  };
+
+  
   const onPressPagination = (index: number) => {
     ref.current?.scrollTo({
       /**

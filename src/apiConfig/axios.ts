@@ -13,7 +13,7 @@ import axiosUtils from "../utils/axiosUtils";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
 const config: AxiosRequestConfig = {
-  timeout: 30000,
+  timeout: 2000,
   headers: {
     source: "mobile",
   },
