@@ -35,6 +35,7 @@ type Props = {
   ref?: RefCallBack | RefObject<any>;
   onBlur?: (event: FocusEvent) => void;
   onChange?: (event: any) => void;
+  placeholderTextColor?: string
 };
 const InputText = (props: Props) => {
   const [text, setText] = useState('');
@@ -51,6 +52,7 @@ const InputText = (props: Props) => {
     labelStyle = {},
     dropdown = false,
     isError,
+    placeholderTextColor,
     ...rest
   } = props;
   return (
@@ -73,6 +75,7 @@ const InputText = (props: Props) => {
           onBlur={rest.onBlur}
           onChangeText={rest.onChange}
           placeholder={placeholder}
+          placeholderTextColor={placeholderTextColor ?? "gray"}
         />
         {dropdown && (
           <Svg

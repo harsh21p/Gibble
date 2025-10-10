@@ -1,10 +1,10 @@
 import {
   Alert, EmitterSubscription, FlatList, Keyboard, TextInput,
-  TouchableOpacity, View
+  TouchableOpacity, View, Text
 } from 'react-native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styles from './styles';
-import { ScrollView, Text } from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import { useStringsContext } from '../../context/strings-context';
 import Svg, { Line } from 'react-native-svg';
 import DashedDivider from '../DashedDivider';
@@ -24,7 +24,7 @@ import DeviceInfo from 'react-native-device-info';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { handleMusicalDetailsState } from '../../utils/commonFunctions';
 import { iMusicalDetailsErrors, ImusicClassDetails } from '../../types';
-
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
 type Props = {
@@ -468,9 +468,10 @@ const SignupLevel = ({ style, onClickNext, isTablet }: Props) => {
   ) : (
     <KeyboardAwareScrollView
       nestedScrollEnabled={true}
+      enableOnAndroid={true}
       contentContainerStyle={[
         styles.keyboardAwareContainerPhoneStyle,
-        { flex: isKeyboardVisible ? 0 : 1 },
+        { flexGrow: isKeyboardVisible ? 0 : 1},
       ]}
     >
       <ScrollView
@@ -479,7 +480,7 @@ const SignupLevel = ({ style, onClickNext, isTablet }: Props) => {
           flex: insets.bottom == 0 ? 0 : isKeyboardVisible ? 0 : 1,
         }}
         nestedScrollEnabled={true}
-      // onScroll={e => console.log(e)}
+      onScroll={e => console.log(e)}
       >
         <View style={[styles.container, style]}>
           <Text style={styles.titlePhone}>{stringsData?.signup?.main}</Text>
@@ -566,7 +567,6 @@ const SignupLevel = ({ style, onClickNext, isTablet }: Props) => {
           </View>
           {handleStepperrender(selected)}
         </View>
-
         <View
           style={[
             styles.buttonViewPhone,
