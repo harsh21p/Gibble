@@ -29,19 +29,19 @@ export const BaseURL = {
   },
   QA: {
     envName: Envs.QA,
-    baseUrl: "https://backend-dental.onrender.com/api",
+    baseUrl: "https://fakestoreapi.com",
   },
   UAT: {
     envName: Envs.UAT,
-    baseUrl: "https://backend-dental.onrender.com/api",
+    baseUrl: "https://fakestoreapi.com",
   },
   DEMO: {
     envName: Envs.DEMO,
-    baseUrl: "https://backend-dental.onrender.com/api",
+    baseUrl: "https://fakestoreapi.com",
   },
   PROD: {
     envName: Envs.PROD,
-    baseUrl: "https://backend-dental.onrender.com/api",
+    baseUrl: "https://fakestoreapi.com",
   },
 };
 

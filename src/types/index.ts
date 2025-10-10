@@ -1,6 +1,23 @@
-import { number, string } from "@redux-saga/is";
-import { Double } from "react-native/Libraries/Types/CodegenTypes";
+import { number, string } from '@redux-saga/is';
+import { Double } from 'react-native/Libraries/Types/CodegenTypes';
 
+export interface CreateMaterialSuccess {}
+export interface CreateMaterialProps {}
+export interface CreateMaterialInfo {
+  createMaterialPayload?: CreateMaterialProps;
+  isCreateMaterialLoading: boolean;
+  createMaterialResponse?: CreateMaterialSuccess;
+  createMaterialResponseError?: CreateMaterialError;
+}
+export interface CreateMaterialError {}
+
+export interface CreateMaterialProps {
+  payload: {
+    labId: string;
+    materialId: string;
+    price: string;
+  };
+}
 //Auth
 export interface UserAuthType {
   accessToken: string;
@@ -138,7 +155,7 @@ export type Entry = {
     email: string;
     created: string | null;
     deleted: string | null;
-    address:string;
+    address: string;
   };
   created: string | null;
   deleted: string | null;
@@ -198,7 +215,7 @@ export interface AddEntryProps {
     amount: Double;
     graph: number[];
     unit: string;
-    patient:string;
+    patient: string;
   };
 }
 export interface AddEntryInfo {
@@ -261,7 +278,7 @@ export interface AddDoctorProps {
     lastName: string;
     email: string;
     phone: string;
-    address:string;
+    address: string;
   };
 }
 export interface AddDoctorInfo {

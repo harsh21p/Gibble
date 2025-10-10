@@ -1,11 +1,11 @@
-import { RootState } from "redux/store";
+import { RootState } from "../../../redux/store";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   CreateMaterialSuccess,
   CreateMaterialProps,
   CreateMaterialInfo,
   CreateMaterialError,
-} from "types";
+} from "../../../types";
 
 export const initialState: CreateMaterialInfo = {
   createMaterialPayload: undefined,

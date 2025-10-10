@@ -7,7 +7,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import styles from './styles';
 import Images from '../../assets/images';
 import InputText from '../../components/InputText';
@@ -31,8 +31,11 @@ const Signup = (props: Props) => {
   const ref = React.useRef<ICarouselInstance>(null);
   const progress = useSharedValue<number>(0);
 
-  const { getMaterialError, getMaterialResponse, isGetMaterialLoading } =
-    useAppSelector(createMaterialInfo);
+  const {
+    isCreateMaterialLoading,
+    createMaterialResponse,
+    createMaterialResponseError,
+  } = useAppSelector(createMaterialInfo);
   const dispatch = useAppDispatch();
 
   const onGetMaterial = async () => {
@@ -42,7 +45,14 @@ const Signup = (props: Props) => {
     dispatch(callCreateMaterial(payload));
   };
 
-  
+  useEffect(() => {
+    // onGetMaterial();
+  }, [
+    isCreateMaterialLoading,
+    callCreateMaterial,
+    createMaterialResponseError,
+  ]);
+
   const onPressPagination = (index: number) => {
     ref.current?.scrollTo({
       /**
