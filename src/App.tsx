@@ -36,6 +36,7 @@ function App(): React.ReactElement {
     $filledBgColor: '#B4DBFF',
     $unSelectColor: '#40566D',
     $fadedBorderColor: '#6c849D',
+    $errorTextColor: "#D92D20"
   });
   return (
     <>

@@ -96,7 +96,7 @@ const styles = EStyleSheet.create({
   buttonView: {
     width: '40%',
     paddingRight: '5%',
-    alignSelf:"flex-end",
+    alignSelf: 'flex-end',
     marginTop: 20,
   },
   buttonViewPhone: {
@@ -193,6 +193,11 @@ const styles = EStyleSheet.create({
   selectedMusicalDetailsStyle: {
     borderColor: '$primaryBgColor',
     color: '$primaryBgColor',
+  },
+  errorTextStyle: {
+    color: '$errorTextColor',
+    fontSize: 12,
+    fontStyle: 'italic',
   },
 } as { [key: string]: ExtendedStyle });
 

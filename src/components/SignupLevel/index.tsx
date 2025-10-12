@@ -23,8 +23,10 @@ import {
 import DeviceInfo from 'react-native-device-info';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { handleMusicalDetailsState } from '../../utils/commonFunctions';
-import { iMusicalDetailsErrors, ImusicClassDetails } from '../../types';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { EiconDisplay, iMusicalDetailsErrors, ImusicClassDetails } from '../../types';
+import Icon from 'react-native-vector-icons';
+import MaterialIcons from '../Icons/MaterialIcons';
+
 
 
 type Props = {
@@ -38,7 +40,12 @@ const SignupLevel = ({ style, onClickNext, isTablet }: Props) => {
   const [selected, setSelected] = useState(1);
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const [muscialDetails, setMusicalDetails] = useState<ImusicClassDetails>(musicalDataInstance);
-  const [musicalDetailsError, setMusicalDetailsError] = useState<iMusicalDetailsErrors>()
+  const [musicalDetailsError, setMusicalDetailsError] = useState<iMusicalDetailsErrors>({
+    className: { message: "Please enter your classname", isError: false }, Instruments: { message: "Please select your instrument", isError: false },
+    Experience: { message: "Please select total years of experience", isError: false },
+    ModeOfTeaching: { message: "Please select your mode of teaching", isError: false },
+    Students: { message: "Please select the number of students you have", isError: false }
+  })
   const { INSTRUMENTS, EXPERIENCE, MODE_OF_TEACHING, STUDENTS } = StaticDataNamespace.MusicalDetailsKeys;
   const { register, handleSubmit, formState: { errors }, control, getValues, } = useForm({
     resolver: zodResolver(schema.SignUpSchema),
@@ -56,7 +63,7 @@ const SignupLevel = ({ style, onClickNext, isTablet }: Props) => {
     return (
       <TouchableOpacity
         key={`${index}-${key}`}
-        onPress={() => handleMusicalDetailsState(setMusicalDetails, key, value)}
+        onPress={() => handleMusicalDetailsState(setMusicalDetails, setMusicalDetailsError, key, value)}
       >
         <Text
           style={[
@@ -106,10 +113,11 @@ const SignupLevel = ({ style, onClickNext, isTablet }: Props) => {
         const isValid = classNameRegex.test(classNameRef.current) && [Experience, Instruments, Students, ModeOfTeaching].every(item => item.some(element => element.isSelected));
         setMusicalDetailsError((prev: any) => ({
           ...prev,
-          className: { message: !classNameRegex.test(classNameRef.current) ? "Please enter class name" : "" },
-          Experience: { message: Experience.some(element => element.isSelected) ? "" : "Please select total years of experience" },
-          Students: { message: Students.some(element => element.isSelected) ? "" : "Please select the number of students you have" },
-          ModeOfTeaching: { message: ModeOfTeaching.some(element => element.isSelected) ? "" : "Please select your mode of teaching" }
+          className: { ...prev.className, isError: !classNameRegex.test(classNameRef.current) ? true : false },
+          Experience: { ...prev.Experience, isError: !Experience.some(element => element.isSelected) ? true : false },
+          Students: { ...prev.Students, isError: !Students.some(element => element.isSelected) ? true : false },
+          ModeOfTeaching: { ...prev.ModeOfTeaching, isError: !ModeOfTeaching.some(element => element.isSelected) ? true : false },
+          Instruments: { ...prev.Instruments, isError: !Instruments.some(element => element.isSelected) ? true : false }
         }))
         if (isValid) {
           onClickNext();
@@ -117,7 +125,7 @@ const SignupLevel = ({ style, onClickNext, isTablet }: Props) => {
         }
       }
     }
-  }, [selected]);
+  }, [selected, muscialDetails]);
   /**
    * 
    * @param index 
@@ -241,15 +249,15 @@ const SignupLevel = ({ style, onClickNext, isTablet }: Props) => {
         );
       case 2:
         return (
-          <View style={[styles.middle, { gap: 15 }]}>
+          <View style={[styles.middle, { gap: 5 }]}>
             {/* Row 1 */}
             <View style={{ gap: 15 }}>
               <InputText
-                isError={musicalDetailsError?.className}
+                isError={musicalDetailsError?.className.isError ? musicalDetailsError?.className : { message: "" }}
                 labelStyle={styles.labelStyle}
                 onChange={text => {
-                  if (musicalDetailsError?.className.message && classNameRegex.test(text)) {
-                    setMusicalDetailsError((prev: any) => ({ ...prev, className: { message: "" } }))
+                  if (musicalDetailsError?.className.isError && classNameRegex.test(text)) {
+                    setMusicalDetailsError((prev: any) => ({ ...prev, className: { isError: false } }))
                   }
                   classNameRef.current = text
                 }}
@@ -266,37 +274,69 @@ const SignupLevel = ({ style, onClickNext, isTablet }: Props) => {
               <Text style={styles.labelStyle}>
                 Which instrument do you offer lessons for?
               </Text>
-              <View style={styles.listStyle}>
-                {muscialDetails.Instruments.map((item, index) =>
-                  renderItems(item, index, INSTRUMENTS),
-                )}
+              <View style={{ gap: 2 }}>
+                <View style={styles.listStyle}>
+                  {muscialDetails.Instruments.map((item, index) =>
+                    renderItems(item, index, INSTRUMENTS),
+                  )}
+                </View>
+                <MaterialIcons
+                  display={musicalDetailsError?.Instruments?.isError ? EiconDisplay.visbile : EiconDisplay.hidden}
+                  color={EStyleSheet.value("$errorTextColor")} name='info-outline'
+                  labelText={musicalDetailsError?.Instruments?.message}
+                  labelTextStyle={[styles.errorTextStyle]}
+                />
               </View>
             </View>
             {/* Row 3 */}
             <View style={{ gap: 15 }}>
               <Text style={styles.labelStyle}>Total years of experience</Text>
-              <View style={styles.listStyle}>
-                {muscialDetails.Experience.map((item, index) =>
-                  renderItems(item, index, EXPERIENCE),
-                )}
+              <View style={{gap: 3}}>
+                <View style={styles.listStyle}>
+                  {muscialDetails.Experience.map((item, index) =>
+                    renderItems(item, index, EXPERIENCE),
+                  )}
+                </View>
+                <MaterialIcons
+                  display={musicalDetailsError?.Experience?.isError ? EiconDisplay.visbile : EiconDisplay.hidden}
+                  color={EStyleSheet.value("$errorTextColor")} name='info-outline'
+                  labelText={musicalDetailsError?.Experience?.message}
+                  labelTextStyle={styles.errorTextStyle}
+                />
               </View>
             </View>
             <View style={{ gap: 15 }}>
               <Text style={styles.labelStyle}>
                 How many students do you currently have?
               </Text>
-              <View style={styles.listStyle}>
-                {muscialDetails.Students.map((item, index) =>
-                  renderItems(item, index, STUDENTS),
-                )}
+              <View style={{gap: 3}}>
+                <View style={styles.listStyle}>
+                  {muscialDetails.Students.map((item, index) =>
+                    renderItems(item, index, STUDENTS),
+                  )}
+                </View>
+                <MaterialIcons
+                  display={musicalDetailsError?.Students?.isError ? EiconDisplay.visbile : EiconDisplay.hidden}
+                  color={EStyleSheet.value("$errorTextColor")} name='info-outline'
+                  labelText={musicalDetailsError?.Students?.message}
+                  labelTextStyle={styles.errorTextStyle}
+                />
               </View>
             </View>
             <View style={{ gap: 15 }}>
               <Text style={styles.labelStyle}>Mode of teaching</Text>
-              <View style={styles.listStyle}>
-                {muscialDetails.ModeOfTeaching.map((item, index) =>
-                  renderItems(item, index, MODE_OF_TEACHING),
-                )}
+              <View style={{gap: 3}}>
+                <View style={styles.listStyle}>
+                  {muscialDetails.ModeOfTeaching.map((item, index) =>
+                    renderItems(item, index, MODE_OF_TEACHING),
+                  )}
+                </View>
+                <MaterialIcons
+                  display={musicalDetailsError?.ModeOfTeaching?.isError ? EiconDisplay.visbile : EiconDisplay.hidden}
+                  color={EStyleSheet.value("$errorTextColor")} name='info-outline'
+                  labelText={musicalDetailsError?.ModeOfTeaching?.message}
+                  labelTextStyle={styles.errorTextStyle}
+                />
               </View>
             </View>
             <View style={styles.phoneLastRowStyle}></View>
@@ -471,7 +511,7 @@ const SignupLevel = ({ style, onClickNext, isTablet }: Props) => {
       enableOnAndroid={true}
       contentContainerStyle={[
         styles.keyboardAwareContainerPhoneStyle,
-        { flexGrow: isKeyboardVisible ? 0 : 1},
+        { flexGrow: isKeyboardVisible ? 0 : 1 },
       ]}
     >
       <ScrollView
@@ -480,7 +520,6 @@ const SignupLevel = ({ style, onClickNext, isTablet }: Props) => {
           flex: insets.bottom == 0 ? 0 : isKeyboardVisible ? 0 : 1,
         }}
         nestedScrollEnabled={true}
-      onScroll={e => console.log(e)}
       >
         <View style={[styles.container, style]}>
           <Text style={styles.titlePhone}>{stringsData?.signup?.main}</Text>

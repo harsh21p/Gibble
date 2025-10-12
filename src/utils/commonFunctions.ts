@@ -3,7 +3,7 @@
 import { Dimensions, PixelRatio } from 'react-native';
 import parser from 'fast-xml-parser';
 import { StaticDataNamespace } from '../constants/staticData';
-import { ImusicClassDetails } from '../types';
+import { iMusicalDetailsErrors, ImusicClassDetails } from '../types';
 
 // Retrieve initial screen's width
 const { height, width } = Dimensions.get('window');
@@ -36,7 +36,12 @@ export const hp = (heightPercent: string | number) => {
 };
 
 export const handleMusicalDetailsState = (
-  setMusicalDetails: (arg: (data: ImusicClassDetails) => ImusicClassDetails) => void,
+  setMusicalDetails: (
+    arg: (data: ImusicClassDetails) => ImusicClassDetails,
+  ) => void,
+  setMusicalDetailsError: (
+    arg: (data: iMusicalDetailsErrors | any) => iMusicalDetailsErrors,
+  ) => void,
   key: StaticDataNamespace.MusicalDetailsKeys,
   value: string,
 ): void => {
@@ -45,11 +50,14 @@ export const handleMusicalDetailsState = (
       ...prev,
       [key]: prev[key].map(
         (item: { value: any; isSelected: any }, index: any) =>
-          item.value == value ? { isSelected: !item.isSelected, value: item.value }
+          item.value == value
+            ? { isSelected: !item.isSelected, value: item.value }
             : key == StaticDataNamespace.MusicalDetailsKeys.INSTRUMENTS
-              ? item : { isSelected: false, value: item.value },
+            ? item
+            : { isSelected: false, value: item.value },
       ),
     };
     return data;
   });
+  setMusicalDetailsError(prev => ({ ...prev, [key]: { ...prev[key], isError: false } }));
 };
