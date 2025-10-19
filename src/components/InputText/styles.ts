@@ -1,12 +1,29 @@
-import { StyleSheet } from 'react-native';
-const styles = StyleSheet.create({
+import {
+  Dimensions,
+  ImageStyle,
+  StyleSheet,
+  TextStyle,
+  ViewStyle,
+} from 'react-native';
+import EStyleSheet from 'react-native-extended-stylesheet';
+// Define a custom type that combines standard RN styles with EStyleSheet features
+type ExtendedStyle =
+  | ViewStyle
+  | TextStyle
+  | ImageStyle
+  | {
+      // Add any specific EStyleSheet properties you use, e.g., variables
+      $variables?: { [key: string]: any };
+      // ... other EStyleSheet specific properties
+    };
+const styles = EStyleSheet.create({
   container: {
     width: '100%',
   },
   label: {
     fontSize: 16,
     color: '#333',
-    marginBottom: 8,
+    paddingBottom: 8,
   },
   input: {
     width: '100%',
@@ -41,6 +58,24 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 10,
   },
-});
+  dropDownContainerStyle: {
+    position: 'absolute',
+    backgroundColor: '$dropDownBgColor',
+    zIndex: 100,
+    top: '110%',
+    maxHeight: Dimensions.get('screen').height / 4,
+    width: '100%',
+    opacity: 10,
+    borderRadius: 3,
+    padding: 5,
+  },
+  dropDownContentContainerStyle: {
+    padding: 10,
+  },
+  dropDownTextStyle: {
+    padding: 3,
+    fontSize: 14,
+  },
+} as { [key: string]: ExtendedStyle });
 
 export default styles;

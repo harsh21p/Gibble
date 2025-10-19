@@ -1,7 +1,12 @@
-import React, { View } from 'react-native';
-import Svg, { Line } from 'react-native-svg';
+import { ColorValue, View, ViewStyle } from 'react-native';
+import Svg, { Line, NumberProp } from 'react-native-svg';
 
-const DashedDivider = ({ style }: any) => (
+const DashedDivider = ({ style, strokeDasharray, color }: {
+  style: ViewStyle,
+  strokeDasharray?: ReadonlyArray<NumberProp> | NumberProp;
+  color?: ColorValue
+
+}) => (
   <View style={style}>
     <Svg height="1" width="80%">
       <Line
@@ -9,9 +14,9 @@ const DashedDivider = ({ style }: any) => (
         y1="0"
         x2="100%"
         y2="0"
-        stroke="#979797"
+        stroke={color ?? "#979797"}
         strokeWidth="1"
-        strokeDasharray={[4, 4]} // dashes
+        strokeDasharray={strokeDasharray} // dashes
       />
     </Svg>
   </View>

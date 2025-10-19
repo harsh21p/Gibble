@@ -1,81 +1,130 @@
 import {
-  Alert, EmitterSubscription, FlatList, Keyboard, TextInput,
-  TouchableOpacity, View, Text
+  EmitterSubscription,
+  Keyboard,
+  TouchableOpacity,
+  View,
+  Text,
 } from 'react-native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styles from './styles';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useStringsContext } from '../../context/strings-context';
-import Svg, { Line } from 'react-native-svg';
 import DashedDivider from '../DashedDivider';
 import Button from '../Button';
 import InputText from '../InputText';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { Controller, ErrorOption, SubmitHandler, useForm } from 'react-hook-form';
+import CheckIcon from 'react-native-vector-icons/Feather';
+import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import schema from '../zod';
-import z from 'zod';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {
   musicalDataInstance,
   StaticDataNamespace,
 } from '../../constants/staticData';
-import DeviceInfo from 'react-native-device-info';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { handleMusicalDetailsState } from '../../utils/commonFunctions';
-import { EiconDisplay, iMusicalDetailsErrors, ImusicClassDetails } from '../../types';
-import Icon from 'react-native-vector-icons';
+import {
+  EiconDisplay,
+  iMusicalDetailsErrors,
+  ImusicClassDetails,
+  IpersonalDetailsDropDownVisibility,
+} from '../../types';
 import MaterialIcons from '../Icons/MaterialIcons';
+import {
+  handleDropDownVisibility,
+  personalDetailsDropDownActionType,
+} from '../../routes/Signup/signupService';
+import PickerComponent from '../Picker/PickerComponent';
+import { classNameRegex, handleNextSubmit } from './SignupLevelService';
+import { useDimensionsContext } from '../../context/dimensions';
 
-
-
-type Props = {
+interface ISignupLevelProps {
   style: any;
   isTablet: boolean;
   onClickNext: () => void;
-};
+  dropDownVisibilityState?: IpersonalDetailsDropDownVisibility;
+  dispatchDropDownVisibility?: (action: {
+    type: personalDetailsDropDownActionType;
+    payload: boolean;
+  }) => void;
+}
 
-const SignupLevel = ({ style, onClickNext, isTablet }: Props) => {
+const SignupLevel = ({
+  style,
+  onClickNext,
+  isTablet,
+  dispatchDropDownVisibility,
+  dropDownVisibilityState,
+}: ISignupLevelProps) => {
   const { stringsData } = useStringsContext();
   const [selected, setSelected] = useState(1);
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
-  const [muscialDetails, setMusicalDetails] = useState<ImusicClassDetails>(musicalDataInstance);
-  const [musicalDetailsError, setMusicalDetailsError] = useState<iMusicalDetailsErrors>({
-    className: { message: "Please enter your classname", isError: false }, Instruments: { message: "Please select your instrument", isError: false },
-    Experience: { message: "Please select total years of experience", isError: false },
-    ModeOfTeaching: { message: "Please select your mode of teaching", isError: false },
-    Students: { message: "Please select the number of students you have", isError: false }
-  })
-  const { INSTRUMENTS, EXPERIENCE, MODE_OF_TEACHING, STUDENTS } = StaticDataNamespace.MusicalDetailsKeys;
-  const { register, handleSubmit, formState: { errors }, control, getValues, } = useForm({
+  const [musicalDetails, setMusicalDetails] =
+    useState<ImusicClassDetails>(musicalDataInstance);
+  const [personalDetailsPicker, setPersonalDetailsPicker] = useState<any>({});
+  const [musicalDetailsError, setMusicalDetailsError] =
+    useState<iMusicalDetailsErrors>({
+      className: { message: 'Please enter your classname', isError: false },
+      Instruments: { message: 'Please select your instrument', isError: false },
+      Experience: {
+        message: 'Please select total years of experience',
+        isError: false,
+      },
+      ModeOfTeaching: {
+        message: 'Please select your mode of teaching',
+        isError: false,
+      },
+      Students: {
+        message: 'Please select the number of students you have',
+        isError: false,
+      },
+    });
+  const { screenDimensions } = useDimensionsContext();
+  const { INSTRUMENTS, EXPERIENCE, MODE_OF_TEACHING, STUDENTS } =
+    StaticDataNamespace.MusicalDetailsKeys;
+  const {
+    handleSubmit,
+    formState: { errors },
+    control,
+    getValues,
+    resetField,
+  } = useForm({
     resolver: zodResolver(schema.SignUpSchema),
   });
-  const classNameRegex = /[a-zA-Z0-9]+\s*/;
-  const classNameRef = useRef<string>("");
+  const classNameRef = useRef<string>('');
   const insets = useSafeAreaInsets();
   /**
-   * 
    */
-  const renderItems = useCallback(({ value, isSelected }: { isSelected: boolean; value: string },
-    index: number,
-    key: StaticDataNamespace.MusicalDetailsKeys
-  ) => {
-    return (
-      <TouchableOpacity
-        key={`${index}-${key}`}
-        onPress={() => handleMusicalDetailsState(setMusicalDetails, setMusicalDetailsError, key, value)}
-      >
-        <Text
-          style={[
-            styles.multiSelectTextStyle,
-            isSelected && styles.selectedMusicalDetailsStyle,
-          ]}
+  const renderItems = useCallback(
+    (
+      { value, isSelected }: { isSelected: boolean; value: string },
+      index: number,
+      key: StaticDataNamespace.MusicalDetailsKeys,
+    ) => {
+      return (
+        <TouchableOpacity
+          key={`${index}-${key}`}
+          onPress={() =>
+            handleMusicalDetailsState(
+              setMusicalDetails,
+              setMusicalDetailsError,
+              key,
+              value,
+            )
+          }
         >
-          {value}
-        </Text>
-      </TouchableOpacity>
-    );
-  },
+          <Text
+            style={[
+              styles.multiSelectTextStyle,
+              isSelected && styles.selectedMusicalDetailsStyle,
+            ]}
+          >
+            {value}
+          </Text>
+        </TouchableOpacity>
+      );
+    },
     [],
   );
 
@@ -92,46 +141,198 @@ const SignupLevel = ({ style, onClickNext, isTablet }: Props) => {
    * A function to handle and validate the submit data
    * @returns void
    */
-  const handleNextSubmit = useCallback(() => {
-    console.log(selected)
-    switch (selected) {
-      case 1: {
-        return handleSubmit(
-          () => {
-            onClickNext();
-            setSelected(prev => (prev <= 2 ? prev + 1 : prev));
-          },
-          () => {
-            // An alert to be shown when error 
-            setSelected(prev => (prev <= 2 ? prev + 1 : prev));
-          },
-        )()
-      }
-      case 2: {
-        const { musicClassName, Experience, Instruments, Students, ModeOfTeaching } = muscialDetails;
-        console.log(classNameRef.current, classNameRegex.test(classNameRef.current))
-        const isValid = classNameRegex.test(classNameRef.current) && [Experience, Instruments, Students, ModeOfTeaching].every(item => item.some(element => element.isSelected));
-        setMusicalDetailsError((prev: any) => ({
-          ...prev,
-          className: { ...prev.className, isError: !classNameRegex.test(classNameRef.current) ? true : false },
-          Experience: { ...prev.Experience, isError: !Experience.some(element => element.isSelected) ? true : false },
-          Students: { ...prev.Students, isError: !Students.some(element => element.isSelected) ? true : false },
-          ModeOfTeaching: { ...prev.ModeOfTeaching, isError: !ModeOfTeaching.some(element => element.isSelected) ? true : false },
-          Instruments: { ...prev.Instruments, isError: !Instruments.some(element => element.isSelected) ? true : false }
-        }))
-        if (isValid) {
-          onClickNext();
-          setSelected(prev => (prev <= 2 ? prev + 1 : prev));
-        }
+
+  const pickerRef = useRef<any>(null);
+  /**
+   *
+   * @param index
+   * @returns
+   */
+  const handleStepperrender = (index: number, isTablet?: boolean) => {
+    if (isTablet) {
+      switch (index) {
+        case 1:
+          return (
+            <View style={styles.middle}>
+              {/* Row 1 */}
+              <View style={styles.row}>
+                <Controller
+                  control={control}
+                  name="firstName"
+                  render={({ field }) => (
+                    <InputText
+                      {...field}
+                      isError={errors.firstName}
+                      labelStyle={styles.labelStyleTablet}
+                      required
+                      style={styles.input}
+                      styleInput={styles.inputMain}
+                      placeholder={'First Name'}
+                      lable={'First Name'}
+                    />
+                  )}
+                />
+                <Controller
+                  control={control}
+                  name="lastName"
+                  render={({ field }) => (
+                    <InputText
+                      {...field}
+                      labelStyle={styles.labelStyleTablet}
+                      required
+                      isError={errors.lastName}
+                      style={styles.input}
+                      styleInput={styles.inputMain}
+                      placeholder={'Last Name'}
+                      lable={'Last Name'}
+                    />
+                  )}
+                />
+              </View>
+
+              {/* Row 2 */}
+              <View style={styles.row}>
+                <Controller
+                  control={control}
+                  name="country"
+                  render={({ field: { onChange, ...rest } }) => (
+                    <InputText
+                      {...rest}
+                      onChange={text => {
+                        onChange(text);
+                        resetField('city');
+                      }}
+                      isError={errors.country}
+                      labelStyle={styles.labelStyleTablet}
+                      required
+                      style={styles.input}
+                      styleInput={styles.inputMain}
+                      placeholder={'Country'}
+                      dropDownContainerStyle={{
+                        maxHeight: screenDimensions.screenHeight / 4,
+                      }}
+                      dropdown
+                      dropDownData={StaticDataNamespace.countries}
+                      lable={'Country'}
+                      getValues={getValues}
+                      isDropDownVisible={
+                        dropDownVisibilityState?.isCountryDropDownVisible
+                      }
+                      dropDownRenderItemKey={'name'}
+                      setIsDropDownVisible={payload =>
+                        handleDropDownVisibility(dispatchDropDownVisibility, {
+                          type: 'Country',
+                          payload,
+                        })
+                      }
+                    />
+                  )}
+                />
+                <Controller
+                  control={control}
+                  name="city"
+                  render={({ field }) => (
+                    <InputText
+                      {...field}
+                      isError={errors.city}
+                      labelStyle={styles.labelStyleTablet}
+                      required
+                      style={styles.input}
+                      styleInput={styles.inputMain}
+                      placeholder={'City'}
+                      dropdown
+                      dropDownContainerStyle={{
+                        maxHeight: screenDimensions.screenHeight / 4,
+                      }}
+                      isDropDownVisible={
+                        dropDownVisibilityState?.isCityDropDownVisible
+                      }
+                      setIsDropDownVisible={payload =>
+                        handleDropDownVisibility(dispatchDropDownVisibility, {
+                          type: 'City',
+                          payload,
+                        })
+                      }
+                      getValues={getValues}
+                      dropDownData={
+                        StaticDataNamespace.CitiesObjectWithCountry[
+                          getValues('country')
+                        ]
+                      }
+                      lable={'City'}
+                    />
+                  )}
+                />
+              </View>
+              {/* Row 3 */}
+              <View style={styles.row}>
+                <Controller
+                  control={control}
+                  name="pincode"
+                  render={({ field }) => (
+                    <InputText
+                      {...field}
+                      isError={errors.pincode}
+                      styleInput={styles.inputMain}
+                      style={styles.singleInput}
+                      labelStyle={styles.labelStyleTablet}
+                      placeholder={'Pin Code'}
+                      lable={'Pin Code'}
+                      required
+                    />
+                  )}
+                />
+              </View>
+
+              {/* Row 4 */}
+              <View style={styles.row}>
+                <Controller
+                  name="age"
+                  control={control}
+                  render={({ field: { onChange, ...rest } }) => {
+                    return (
+                      <PickerComponent
+                        {...rest}
+                        isError={errors.age}
+                        styleInput={styles.inputMain}
+                        labelStyle={styles.labelStyleTablet}
+                        style={styles.singleInputAge}
+                        selectedValue={personalDetailsPicker?.age}
+                        onValueChange={(value: any) => {
+                          onChange(+value);
+                          setPersonalDetailsPicker((prev: any) => ({
+                            ...prev,
+                            age: value,
+                          }));
+                        }}
+                        placeholder={'26'}
+                        labelText={'Age'}
+                        isRequired={true}
+                        pickerStyles={{
+                          inputIOSContainer: {
+                            zIndex: 100,
+                            borderBottomWidth: 1,
+                            backgroundColor: errors.age?.message
+                              ? '#ffe1e1ff'
+                              : 'rgba(108, 132, 157, 0.12)',
+                            borderColor: errors.age?.message
+                              ? '#d57272ff'
+                              : '#ccc',
+                          },
+                        }}
+                        pickerData={[...new Array(100)].map((i, j) => ({
+                          label: `${j + 1}`,
+                          value: `${j + 1}`,
+                        }))}
+                      />
+                    );
+                  }}
+                />
+              </View>
+            </View>
+          );
       }
     }
-  }, [selected, muscialDetails]);
-  /**
-   * 
-   * @param index 
-   * @returns 
-   */
-  const handleStepperrender = (index: number) => {
     switch (index) {
       case 1:
         return (
@@ -187,6 +388,9 @@ const SignupLevel = ({ style, onClickNext, isTablet }: Props) => {
                     styleInput={styles.inputMain}
                     placeholder={'Country'}
                     dropdown
+                    dropDownContainerStyle={{
+                      maxHeight: screenDimensions.screenHeight / 4,
+                    }}
                     lable={'Country'}
                   />
                 )}
@@ -204,6 +408,9 @@ const SignupLevel = ({ style, onClickNext, isTablet }: Props) => {
                     styleInput={styles.inputMain}
                     placeholder={'City'}
                     dropdown
+                    dropDownContainerStyle={{
+                      maxHeight: screenDimensions.screenHeight / 4,
+                    }}
                     lable={'City'}
                   />
                 )}
@@ -241,6 +448,16 @@ const SignupLevel = ({ style, onClickNext, isTablet }: Props) => {
                     placeholder={'26'}
                     lable={'Age'}
                     dropdown
+                    isDropDownVisible={
+                      dropDownVisibilityState?.isAgeDropDownVisible
+                    }
+                    setIsDropDownVisible={value =>
+                      handleDropDownVisibility(dispatchDropDownVisibility, {
+                        type: 'Age',
+                        payload: value,
+                      })
+                    }
+                    dropDownData={[...new Array(100)].map((i, j) => `${j + 1}`)}
                   />
                 )}
               />
@@ -253,13 +470,23 @@ const SignupLevel = ({ style, onClickNext, isTablet }: Props) => {
             {/* Row 1 */}
             <View style={{ gap: 15 }}>
               <InputText
-                isError={musicalDetailsError?.className.isError ? musicalDetailsError?.className : { message: "" }}
+                isError={
+                  musicalDetailsError?.className.isError
+                    ? musicalDetailsError?.className
+                    : { message: '' }
+                }
                 labelStyle={styles.labelStyle}
                 onChange={text => {
-                  if (musicalDetailsError?.className.isError && classNameRegex.test(text)) {
-                    setMusicalDetailsError((prev: any) => ({ ...prev, className: { isError: false } }))
+                  if (
+                    musicalDetailsError?.className.isError &&
+                    classNameRegex.test(text)
+                  ) {
+                    setMusicalDetailsError((prev: any) => ({
+                      ...prev,
+                      className: { isError: false },
+                    }));
                   }
-                  classNameRef.current = text
+                  classNameRef.current = text;
                 }}
                 required
                 style={{ width: '100%' }}
@@ -276,13 +503,18 @@ const SignupLevel = ({ style, onClickNext, isTablet }: Props) => {
               </Text>
               <View style={{ gap: 2 }}>
                 <View style={styles.listStyle}>
-                  {muscialDetails.Instruments.map((item, index) =>
+                  {musicalDetails.Instruments.map((item, index) =>
                     renderItems(item, index, INSTRUMENTS),
                   )}
                 </View>
                 <MaterialIcons
-                  display={musicalDetailsError?.Instruments?.isError ? EiconDisplay.visbile : EiconDisplay.hidden}
-                  color={EStyleSheet.value("$errorTextColor")} name='info-outline'
+                  display={
+                    musicalDetailsError?.Instruments?.isError
+                      ? EiconDisplay.visbile
+                      : EiconDisplay.hidden
+                  }
+                  color={EStyleSheet.value('$errorTextColor')}
+                  name="info-outline"
                   labelText={musicalDetailsError?.Instruments?.message}
                   labelTextStyle={[styles.errorTextStyle]}
                 />
@@ -291,15 +523,20 @@ const SignupLevel = ({ style, onClickNext, isTablet }: Props) => {
             {/* Row 3 */}
             <View style={{ gap: 15 }}>
               <Text style={styles.labelStyle}>Total years of experience</Text>
-              <View style={{gap: 3}}>
+              <View style={{ gap: 3 }}>
                 <View style={styles.listStyle}>
-                  {muscialDetails.Experience.map((item, index) =>
+                  {musicalDetails.Experience.map((item, index) =>
                     renderItems(item, index, EXPERIENCE),
                   )}
                 </View>
                 <MaterialIcons
-                  display={musicalDetailsError?.Experience?.isError ? EiconDisplay.visbile : EiconDisplay.hidden}
-                  color={EStyleSheet.value("$errorTextColor")} name='info-outline'
+                  display={
+                    musicalDetailsError?.Experience?.isError
+                      ? EiconDisplay.visbile
+                      : EiconDisplay.hidden
+                  }
+                  color={EStyleSheet.value('$errorTextColor')}
+                  name="info-outline"
                   labelText={musicalDetailsError?.Experience?.message}
                   labelTextStyle={styles.errorTextStyle}
                 />
@@ -309,15 +546,20 @@ const SignupLevel = ({ style, onClickNext, isTablet }: Props) => {
               <Text style={styles.labelStyle}>
                 How many students do you currently have?
               </Text>
-              <View style={{gap: 3}}>
+              <View style={{ gap: 3 }}>
                 <View style={styles.listStyle}>
-                  {muscialDetails.Students.map((item, index) =>
+                  {musicalDetails.Students.map((item, index) =>
                     renderItems(item, index, STUDENTS),
                   )}
                 </View>
                 <MaterialIcons
-                  display={musicalDetailsError?.Students?.isError ? EiconDisplay.visbile : EiconDisplay.hidden}
-                  color={EStyleSheet.value("$errorTextColor")} name='info-outline'
+                  display={
+                    musicalDetailsError?.Students?.isError
+                      ? EiconDisplay.visbile
+                      : EiconDisplay.hidden
+                  }
+                  color={EStyleSheet.value('$errorTextColor')}
+                  name="info-outline"
                   labelText={musicalDetailsError?.Students?.message}
                   labelTextStyle={styles.errorTextStyle}
                 />
@@ -325,15 +567,20 @@ const SignupLevel = ({ style, onClickNext, isTablet }: Props) => {
             </View>
             <View style={{ gap: 15 }}>
               <Text style={styles.labelStyle}>Mode of teaching</Text>
-              <View style={{gap: 3}}>
+              <View style={{ gap: 3 }}>
                 <View style={styles.listStyle}>
-                  {muscialDetails.ModeOfTeaching.map((item, index) =>
+                  {musicalDetails.ModeOfTeaching.map((item, index) =>
                     renderItems(item, index, MODE_OF_TEACHING),
                   )}
                 </View>
                 <MaterialIcons
-                  display={musicalDetailsError?.ModeOfTeaching?.isError ? EiconDisplay.visbile : EiconDisplay.hidden}
-                  color={EStyleSheet.value("$errorTextColor")} name='info-outline'
+                  display={
+                    musicalDetailsError?.ModeOfTeaching?.isError
+                      ? EiconDisplay.visbile
+                      : EiconDisplay.hidden
+                  }
+                  color={EStyleSheet.value('$errorTextColor')}
+                  name="info-outline"
                   labelText={musicalDetailsError?.ModeOfTeaching?.message}
                   labelTextStyle={styles.errorTextStyle}
                 />
@@ -353,154 +600,84 @@ const SignupLevel = ({ style, onClickNext, isTablet }: Props) => {
         <Text style={styles.title}>{stringsData?.signup?.main}</Text>
         {/* stepper */}
         <View style={styles.stepperMain}>
-          <Text
-            onPress={() => {
-              setSelected(1);
-            }}
-            style={[styles.label, selected == 1 && styles.selected]}
-          >
-            {stringsData?.signup?.step1}
-          </Text>
-          <DashedDivider style={styles.line} />
-          <Text
-            onPress={() => {
-              setSelected(2);
-            }}
-            style={[styles.label, selected == 2 && styles.selected]}
-          >
-            {stringsData?.signup?.step2}
-          </Text>
-          <DashedDivider style={styles.line} />
-          <Text
-            onPress={() => {
-              setSelected(3);
-            }}
-            style={[styles.label, selected == 3 && styles.selected]}
-          >
-            {stringsData?.signup?.step3}
-          </Text>
-        </View>
-        <View style={styles.middle}>
-          {/* Row 1 */}
-          <View style={styles.row}>
-            <Controller
-              control={control}
-              name="firstName"
-              render={({ field }) => (
-                <InputText
-                  {...field}
-                  isError={errors.firstName}
-                  labelStyle={styles.labelStyle}
-                  required
-                  style={styles.input}
-                  styleInput={styles.inputMain}
-                  placeholder={'First Name'}
-                  lable={'First Name'}
-                />
-              )}
-            />
-            <Controller
-              control={control}
-              name="lastName"
-              render={({ field }) => (
-                <InputText
-                  {...field}
-                  labelStyle={styles.labelStyle}
-                  required
-                  isError={errors.lastName}
-                  style={styles.input}
-                  styleInput={styles.inputMain}
-                  placeholder={'Last Name'}
-                  lable={'Last Name'}
-                />
-              )}
-            />
+          <View style={styles.stepperIndividualContainer}>
+            {selected > 1 ? (
+              <CheckIcon
+                name="check-circle"
+                size={20}
+                color={EStyleSheet.value('$successColor')}
+              />
+            ) : null}
+            <Text style={[styles.label, selected >= 1 && styles.selected]}>
+              {stringsData?.signup?.step1}
+            </Text>
           </View>
 
-          {/* Row 2 */}
-          <View style={styles.row}>
-            <Controller
-              control={control}
-              name="country"
-              render={({ field }) => (
-                <InputText
-                  {...field}
-                  isError={errors.country}
-                  labelStyle={styles.labelStyle}
-                  required
-                  style={styles.input}
-                  styleInput={styles.inputMain}
-                  placeholder={'Country'}
-                  dropdown
-                  lable={'Country'}
-                />
-              )}
-            />
-            <Controller
-              control={control}
-              name="city"
-              render={({ field }) => (
-                <InputText
-                  {...field}
-                  isError={errors.city}
-                  labelStyle={styles.labelStyle}
-                  required
-                  style={styles.input}
-                  styleInput={styles.inputMain}
-                  placeholder={'City'}
-                  dropdown
-                  lable={'City'}
-                />
-              )}
-            />
-          </View>
-          {/* Row 3 */}
-          <View style={styles.row}>
-            <Controller
-              control={control}
-              name="pincode"
-              render={({ field }) => (
-                <InputText
-                  {...field}
-                  isError={errors.pincode}
-                  styleInput={styles.inputMain}
-                  style={styles.singleInput}
-                  labelStyle={styles.labelStyle}
-                  placeholder={'Pin Code'}
-                  lable={'Pin Code'}
-                  required
-                />
-              )}
-            />
-          </View>
+          <DashedDivider
+            style={styles.line}
+            strokeDasharray={selected > 1 ? [0, 0] : [4, 4]}
+            color={EStyleSheet.value(
+              selected > 1 ? '$primaryBgColor' : '$disabledTextColor',
+            )}
+          />
+          <View style={styles.stepperIndividualContainer}>
+            {selected > 2 ? (
+              <CheckIcon
+                size={20}
+                name="check-circle"
+                color={EStyleSheet.value('$successColor')}
+              />
+            ) : null}
 
-          {/* Row 4 */}
-          <View style={styles.row}>
-            <Controller
-              control={control}
-              name="age"
-              render={({ field }) => (
-                <InputText
-                  {...field}
-                  isError={errors.age}
-                  styleInput={styles.inputMain}
-                  labelStyle={styles.labelStyle}
-                  style={styles.singleInputAge}
-                  placeholder={'26'}
-                  lable={'Age'}
-                  dropdown
-                />
-              )}
-            />
+            <Text style={[styles.label, selected >= 2 && styles.selected]}>
+              {stringsData?.signup?.step2}
+            </Text>
+          </View>
+          <DashedDivider
+            style={styles.line}
+            strokeDasharray={selected > 2 ? [0, 0] : [4, 4]}
+          />
+          <View style={styles.stepperIndividualContainer}>
+            {selected > 3 ? (
+              <CheckIcon
+                size={20}
+                name="check-circle"
+                color={EStyleSheet.value('$successColor')}
+              />
+            ) : null}
+            <Text style={[styles.label, selected == 3 && styles.selected]}>
+              {stringsData?.signup?.step3}
+            </Text>
           </View>
         </View>
+        {handleStepperrender(selected, true)}
 
         <View style={styles.buttonView}>
+          {selected > 1 ? (
+            <Button
+              style={styles.buttonStyleOutline}
+              textStyle={styles.textStyleOutline}
+              title="Back"
+              onClickSignup={() => {
+                setSelected(prev => prev - 1);
+              }}
+            />
+          ) : null}
           <Button
             style={styles.next}
             textStyle={styles.textStyle}
             title="Next"
-            onClickSignup={handleSubmit(onClickNext)}
+            onClickSignup={() =>
+              handleNextSubmit(
+                selected,
+                handleSubmit,
+                setSelected,
+                musicalDetails,
+                classNameRef,
+                setMusicalDetailsError,
+                onClickNext,
+              )
+            }
           />
         </View>
       </View>

@@ -36,6 +36,17 @@ export namespace StaticDataNamespace {
     STUDENTS = 'Students',
     MODE_OF_TEACHING = 'ModeOfTeaching',
   }
+  export interface iCitiesWithCountry {
+    country: string;
+    cities: Array<any>;
+    iso2: string
+  }
+  export interface iCountries {
+    name: string;
+    code: string;
+  }
+  export const CitiesObjectWithCountry: any = {};
+  export const countries: iCountries[] = [];
 }
 
 export const musicalDataInstance = new StaticDataNamespace.MusicalStaticData();

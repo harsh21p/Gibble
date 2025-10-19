@@ -76,7 +76,11 @@ export interface UserSignupError {
   data: string;
   error: boolean;
 }
-
+export interface IpersonalDetailsDropDownVisibility {
+  isCountryDropDownVisible: boolean;
+  isAgeDropDownVisible: boolean;
+  isCityDropDownVisible: boolean;
+}
 //Ping
 
 export interface GetPingProps {}

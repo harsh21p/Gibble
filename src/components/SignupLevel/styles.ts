@@ -73,6 +73,11 @@ const styles = EStyleSheet.create({
     marginVertical: 50,
     alignSelf: 'center',
   },
+  stepperIndividualContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+  },
   phoneStepperMain: {
     width: '100%',
     flexDirection: 'row',
@@ -159,6 +164,12 @@ const styles = EStyleSheet.create({
   labelStyle: {
     fontSize: 12,
     fontWeight: '500',
+    color: '$labelTextColor',
+  },
+  labelStyleTablet: {
+    fontSize: 14,
+    fontWeight: 500,
+    color: '$labelTextColor',
   },
   disabledBgStyle: {
     backgroundColor: '$blurBgColor',
