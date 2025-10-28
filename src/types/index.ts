@@ -1,5 +1,7 @@
-import { number, string } from "@redux-saga/is";
-import { Double } from "react-native/Libraries/Types/CodegenTypes";
+import { number, string } from '@redux-saga/is';
+import { ErrorOption } from 'react-hook-form';
+import { TextStyle, ViewStyle } from 'react-native';
+import { Double } from 'react-native/Libraries/Types/CodegenTypes';
 
 //Auth
 export interface UserAuthType {
@@ -74,7 +76,11 @@ export interface UserSignupError {
   data: string;
   error: boolean;
 }
-
+export interface IpersonalDetailsDropDownVisibility {
+  isCountryDropDownVisible: boolean;
+  isAgeDropDownVisible: boolean;
+  isCityDropDownVisible: boolean;
+}
 //Ping
 
 export interface GetPingProps {}
@@ -138,7 +144,7 @@ export type Entry = {
     email: string;
     created: string | null;
     deleted: string | null;
-    address:string;
+    address: string;
   };
   created: string | null;
   deleted: string | null;
@@ -198,7 +204,7 @@ export interface AddEntryProps {
     amount: Double;
     graph: number[];
     unit: string;
-    patient:string;
+    patient: string;
   };
 }
 export interface AddEntryInfo {
@@ -261,7 +267,7 @@ export interface AddDoctorProps {
     lastName: string;
     email: string;
     phone: string;
-    address:string;
+    address: string;
   };
 }
 export interface AddDoctorInfo {
@@ -709,4 +715,47 @@ export interface UpdateImagesError {
   message: string;
   data: string;
   error: boolean;
+}
+
+//sign up
+export interface SelectableItem {
+  isSelected: boolean;
+  value: string;
+}
+
+// Main interface for the music class configuration
+export interface ImusicClassDetails {
+  musicClassName: string;
+  Instruments: SelectableItem[];
+  Experience: SelectableItem[];
+  Students: SelectableItem[];
+  ModeOfTeaching: SelectableItem[];
+}
+
+export interface iMusicalDetailsErrors {
+  className: ErrorOption & { isError: boolean };
+  Instruments: ErrorOption & { isError: boolean };
+  Experience: ErrorOption & { isError: boolean };
+  Students: ErrorOption & { isError: boolean };
+  ModeOfTeaching: ErrorOption & { isError: boolean };
+}
+
+// Icons interface
+export interface IMuiIcons {
+  name: string;
+  size?: number;
+  style?: TextStyle;
+  onPress?(): void;
+  color?: string;
+  IconContainerStyle?: ViewStyle;
+  labelText?: string;
+  labelTextStyle?: ViewStyle | ViewStyle[];
+  labelTextContainerStyle?: ViewStyle;
+  iconVisible?: boolean;
+  display?: EiconDisplay;
+}
+
+export enum EiconDisplay {
+  visbile = 'visible',
+  hidden = 'hidden',
 }

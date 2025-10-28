@@ -13,7 +13,6 @@ type ExtendedStyle =
     };
 const styles = EStyleSheet.create({
   keyboardAwareContainerPhoneStyle: {
-    flex: 1,
     justifyContent: 'space-between',
   },
   container: {
@@ -74,6 +73,11 @@ const styles = EStyleSheet.create({
     marginVertical: 50,
     alignSelf: 'center',
   },
+  stepperIndividualContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+  },
   phoneStepperMain: {
     width: '100%',
     flexDirection: 'row',
@@ -83,8 +87,8 @@ const styles = EStyleSheet.create({
   },
   phoneStepper: {
     backgroundColor: '$primaryBgColor',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
     borderRadius: 250,
   },
   phoneStepperSecondaryContainer: {
@@ -95,24 +99,39 @@ const styles = EStyleSheet.create({
     color: '$whiteText',
   },
   buttonView: {
-    width: '100%',
-    alignContent: 'flex-end',
-    alignItems: 'flex-end',
-    justifyContent: 'flex-end',
+    width: '40%',
     paddingRight: '5%',
+    alignSelf: 'flex-end',
     marginTop: 20,
   },
   buttonViewPhone: {
-    paddingHorizontal: '1.1rem',
+    paddingHorizontal: '1.3rem',
   },
   next: {
-    paddingHorizontal: 70,
     backgroundColor: '$primaryBgColor',
     height: 40,
+    flexGrow: 1,
+  },
+  buttonStyleOutline: {
+    backgroundColor: '$whiteText',
+    height: 40,
+    flexGrow: 1,
+    borderWidth: 1,
+    borderColor: '$primaryBgColor',
+  },
+  multipleButtonsView: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: '1rem',
   },
   textStyle: {
     fontSize: 15,
     fontWeight: '500',
+  },
+  textStyleOutline: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: '$primaryBgColor',
   },
   middle: {
     paddingHorizontal: '5%',
@@ -142,8 +161,54 @@ const styles = EStyleSheet.create({
     height: 40,
     fontSize: 14,
   },
-  stylelable: {
+  labelStyle: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: '$labelTextColor',
+  },
+  labelStyleTablet: {
     fontSize: 14,
+    fontWeight: 500,
+    color: '$labelTextColor',
+  },
+  disabledBgStyle: {
+    backgroundColor: '$blurBgColor',
+  },
+  disabledTextStyle: {
+    color: '$disabledTextColor',
+  },
+  formCompletedStyles: {
+    backgroundColor: '$filledBgColor',
+    paddingVertical: 7,
+    paddingHorizontal: 10,
+  },
+  tickMarkStyle: {
+    color: '$primaryBgColor',
+    fontWeight: '600',
+  },
+  multiSelectTextStyle: {
+    color: '$unSelectColor',
+    fontSize: 14,
+    fontWeight: '400',
+    borderWidth: 1,
+    borderColor: '$fadedBorderColor',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 100,
+  },
+  listStyle: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+  },
+  selectedMusicalDetailsStyle: {
+    borderColor: '$primaryBgColor',
+    color: '$primaryBgColor',
+  },
+  errorTextStyle: {
+    color: '$errorTextColor',
+    fontSize: 12,
+    fontStyle: 'italic',
   },
 } as { [key: string]: ExtendedStyle });
 

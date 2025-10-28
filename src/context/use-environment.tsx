@@ -22,6 +22,7 @@ export enum Envs {
 
 export const DEFAULT_ENVIRONMENT = Envs.DEV;
 
+
 export const BaseURL = {
   DEV: {
     envName: Envs.DEV,
@@ -43,6 +44,9 @@ export const BaseURL = {
     envName: Envs.PROD,
     baseUrl: "https://backend-dental.onrender.com/api",
   },
+  COUNTRIES_URL:{
+    baseUrl: "https://countriesnow.space/api/v0.1/countries"
+  }
 };
 
 interface EnvManager {
