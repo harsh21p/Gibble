@@ -31,12 +31,11 @@ import {
 } from './signupService';
 import { useDimensionsContext } from '../../context/dimensions';
 type Props = {};
-const Signup = (props: Props) => {
-  const onClickSignup = () => { };
+const Signup: React.FC<any> = (props: Props) => {
+  const onClickSignup = () => {};
   const ref = React.useRef<ICarouselInstance>(null);
   const progress = useSharedValue<number>(0);
-  const { screenDimensions } = useDimensionsContext()
-
+  const { screenDimensions } = useDimensionsContext();
 
   const [dropDownVisibilityState, dispatchDropDownVisibility] = useReducer(
     personalDetailsDropDownReducer,
@@ -125,7 +124,12 @@ const Signup = (props: Props) => {
           ) : null}
 
           {isTablet() ? (
-            <View style={[styles.line, { height: screenDimensions.screenHeight / 2 }]} />
+            <View
+              style={[
+                styles.line,
+                { height: screenDimensions.screenHeight / 2 },
+              ]}
+            />
           ) : null}
           {/* Main Form  */}
           {/* <View style={styles.container3}>

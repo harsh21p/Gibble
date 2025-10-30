@@ -249,11 +249,13 @@ const AppNavigator = () => {
         )}
         <RootStack.Screen
           name={routes.Signup}
-          children={(props: any) => (
-            <Suspense fallback={<FullScreenLoader />}>
-              <Signup/>
+          children={(props: any) => {
+            return (
+               <Suspense fallback={<FullScreenLoader />}>
+              <Signup {...props}/>
             </Suspense>
-          )}
+            )
+          }}
         />
       </RootStack.Group>
     );

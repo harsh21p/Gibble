@@ -33,7 +33,7 @@ const SplashScreen = (props: Props) => {
     });
   };
   const renderItem = useMemo(() => {
-    return ({ index }) => (
+    return ({ index }: any) => (
       <View style={{ width: "100%", height: "100%", backgroundColor: '#EAF2FF', justifyContent: 'center', borderRadius: 4 }}>
         <Image key={Images.phone.carousel} style={{
           width: "auto",

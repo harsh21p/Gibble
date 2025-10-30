@@ -25,7 +25,7 @@ const handleNextSubmit = (
         () => {
           // An alert to be shown when error
           // console.log(getValues('country'));
-        //   setSelected((prev: number) => (prev <= 2 ? prev + 1 : prev));
+          setSelected((prev: number) => (prev <= 2 ? prev + 1 : prev));
         },
       )();
     }

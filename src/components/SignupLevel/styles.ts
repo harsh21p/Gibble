@@ -99,10 +99,11 @@ const styles = EStyleSheet.create({
     color: '$whiteText',
   },
   buttonView: {
-    width: '40%',
     paddingRight: '5%',
     alignSelf: 'flex-end',
     marginTop: 20,
+    flexDirection:'row',
+    gap: "2$rem"
   },
   buttonViewPhone: {
     paddingHorizontal: '1.3rem',
@@ -110,14 +111,14 @@ const styles = EStyleSheet.create({
   next: {
     backgroundColor: '$primaryBgColor',
     height: 40,
-    flexGrow: 1,
+    flexGrow: 0.2
   },
   buttonStyleOutline: {
     backgroundColor: '$whiteText',
     height: 40,
-    flexGrow: 1,
     borderWidth: 1,
     borderColor: '$primaryBgColor',
+    flexGrow: 0.1
   },
   multipleButtonsView: {
     flexDirection: 'row',

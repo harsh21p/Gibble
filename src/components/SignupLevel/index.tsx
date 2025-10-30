@@ -615,7 +615,7 @@ const SignupLevel = ({
 
           <DashedDivider
             style={styles.line}
-            strokeDasharray={selected > 1 ? [0, 0] : [4, 4]}
+            strokeDasharray={selected > 1 ? [] : [4, 4]}
             color={EStyleSheet.value(
               selected > 1 ? '$primaryBgColor' : '$disabledTextColor',
             )}
@@ -635,7 +635,7 @@ const SignupLevel = ({
           </View>
           <DashedDivider
             style={styles.line}
-            strokeDasharray={selected > 2 ? [0, 0] : [4, 4]}
+            strokeDasharray={selected > 2 ? [] : [4, 4]}
           />
           <View style={styles.stepperIndividualContainer}>
             {selected > 3 ? (
